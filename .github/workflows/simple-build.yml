@@ -24,6 +24,14 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
       
+    - name: Create Gradle Wrapper
+      run: |
+        # Download gradle-wrapper.jar since it's missing from the repo
+        mkdir -p gradle/wrapper
+        curl -L -o gradle/wrapper/gradle-wrapper.jar \
+          "https://raw.githubusercontent.com/gradle/gradle/v8.2.0/gradle/wrapper/gradle-wrapper.jar"
+        ls -la gradle/wrapper/
+        
     - name: Make Gradle Executable
       run: chmod +x ./gradlew
       
@@ -31,8 +39,6 @@ jobs:
       run: |
         echo "=== Project Root ==="
         ls -la
-        echo "=== App directory ==="
-        ls -la app/
         echo "=== Gradle Wrapper ==="
         cat gradle/wrapper/gradle-wrapper.properties
         
@@ -45,8 +51,6 @@ jobs:
       run: |
         echo "=== Checking for APK files ==="
         find . -name "*.apk" -type f -exec ls -lh {} \;
-        echo "=== Checking standard output paths ==="
-        ls -la app/build/outputs/apk/debug/ 2>/dev/null || echo "Debug output path not found"
         
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
