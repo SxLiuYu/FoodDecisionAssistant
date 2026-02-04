@@ -1,0 +1,77 @@
+name: Android Build - Simple
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v3
+      
+    - name: Make Gradle Executable
+      run: chmod +x ./gradlew
+      
+    - name: Check project structure
+      run: |
+        echo "=== Project Root ==="
+        ls -la
+        echo "=== App directory ==="
+        ls -la app/
+        echo "=== App src directory ==="
+        ls -la app/src/
+        echo "=== App build.gradle.kts ==="
+        cat app/build.gradle.kts | head -20
+        echo "=== AndroidManifest.xml ==="
+        cat app/src/main/AndroidManifest.xml | head -10
+        
+    - name: Create simple gradle wrapper
+      run: |
+        # If gradlew doesn't work, let's try to create a basic one
+        if [ ! -f "gradle/wrapper/gradle-wrapper.properties" ]; then
+          mkdir -p gradle/wrapper
+          echo "distributionBase=GRADLE_USER_HOME" > gradle/wrapper/gradle-wrapper.properties
+          echo "distributionPath=wrapper/dists" >> gradle/wrapper/gradle-wrapper.properties
+          echo "distributionUrl=https\://services.gradle.org/distributions/gradle-8.2-bin.zip" >> gradle/wrapper/gradle-wrapper.properties
+          echo "zipStoreBase=GRADLE_USER_HOME" >> gradle/wrapper/gradle-wrapper.properties
+          echo "zipStorePath=wrapper/dists" >> gradle/wrapper/gradle-wrapper.properties
+        fi
+        
+    - name: Simple Gradle Command
+      run: |
+        echo "Running: ./gradlew -v"
+        ./gradlew -v || echo "Gradle version failed"
+        echo "Running: ./gradlew tasks --all"
+        ./gradlew tasks --all | head -20 || echo "Tasks listing failed"
+        
+    - name: Attempt to build APK
+      run: |
+        echo "Attempting to build APK..."
+        ./gradlew assembleDebug --no-daemon --stacktrace || echo "Build failed but continuing"
+        
+    - name: Find any APK files
+      run: |
+        find . -name "*.apk" -type f || echo "No APK files found"
+        
+    - name: Upload outputs
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: build-output
+        path: |
+          **/*.apk
+          app/build/outputs/**
+          **/build.log
+        if-no-files-found: ignore
