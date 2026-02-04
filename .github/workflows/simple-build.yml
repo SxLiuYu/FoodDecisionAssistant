@@ -24,12 +24,10 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
       
-    - name: Create Gradle Wrapper
+    - name: Generate Gradle Wrapper
       run: |
-        # Download gradle-wrapper.jar since it's missing from the repo
-        mkdir -p gradle/wrapper
-        curl -L -o gradle/wrapper/gradle-wrapper.jar \
-          "https://raw.githubusercontent.com/gradle/gradle/v8.2.0/gradle/wrapper/gradle-wrapper.jar"
+        # Generate wrapper files using system gradle
+        gradle wrapper --gradle-version 8.2
         ls -la gradle/wrapper/
         
     - name: Make Gradle Executable
