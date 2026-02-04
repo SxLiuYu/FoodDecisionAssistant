@@ -1,0 +1,56 @@
+name: Android Build - Minimal
+
+on:
+  workflow_dispatch:  # 只通过手动触发
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v3
+      
+    - name: Make Gradle Executable
+      run: chmod +x ./gradlew
+      
+    - name: Create minimal gradle wrapper properties
+      run: |
+        mkdir -p gradle/wrapper
+        echo "distributionBase=GRADLE_USER_HOME" > gradle/wrapper/gradle-wrapper.properties
+        echo "distributionPath=wrapper/dists" >> gradle/wrapper/gradle-wrapper.properties
+        echo "distributionUrl=https\://services.gradle.org/distributions/gradle-8.2-bin.zip" >> gradle/wrapper/gradle-wrapper.properties
+        echo "zipStoreBase=GRADLE_USER_HOME" >> gradle/wrapper/gradle-wrapper.properties
+        echo "zipStorePath=wrapper/dists" >> gradle/wrapper/gradle-wrapper.properties
+        cat gradle/wrapper/gradle-wrapper.properties
+        
+    - name: Create basic gradlew script
+      run: |
+        if [ ! -f "gradlew" ]; then
+          echo '#!/bin/sh' > gradlew
+          echo 'echo "Mock gradlew for testing"' >> gradlew
+          chmod +x gradlew
+        fi
+        
+    - name: List project structure
+      run: |
+        pwd
+        ls -la
+        ls -la app/
+        ls -la app/src/main/
+        
+    - name: Upload project files for inspection
+      uses: actions/upload-artifact@v4
+      with:
+        name: project-inspection
+        path: |
+          .
+        if-no-files-found: ignore
