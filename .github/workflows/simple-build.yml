@@ -20,16 +20,33 @@ jobs:
         
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
-      
-    - name: Validate Gradle Wrapper
-      uses: gradle/actions/wrapper-validation@v3
-      continue-on-error: true
-      
-    - name: Build with Gradle
-      uses: gradle/gradle-build-action@v2
       with:
-        arguments: assembleDebug
-        gradle-version: 8.2
+        packages: tools, platform-tools, build-tools, platforms;android-34
+      
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v3
+      
+    - name: Make Gradle Executable
+      run: chmod +x ./gradlew
+      
+    - name: Check project structure
+      run: |
+        echo "=== Project Root ==="
+        ls -la
+        echo "=== App directory ==="
+        ls -la app/
+        echo "=== Gradle Wrapper ==="
+        cat gradle/wrapper/gradle-wrapper.properties
+        echo "=== App build.gradle ==="
+        cat app/build.gradle.kts
+        
+    - name: Gradle Version
+      run: ./gradlew -v
+      
+    - name: Build Debug APK with verbose logging
+      run: |
+        echo "Building Debug APK with verbose logging..."
+        ./gradlew assembleDebug --no-daemon --info --stacktrace
         
     - name: Verify APK Output
       run: |
