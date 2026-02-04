@@ -41,21 +41,18 @@ jobs:
         curl -L -o gradle/wrapper/gradle-wrapper.jar \
           "https://raw.githubusercontent.com/gradle/gradle/v8.2.0/gradle/wrapper/gradle-wrapper.jar"
         
-        # Create gradlew script
-        cat > gradlew << 'EOF'
-        #!/bin/sh
-        exec "$(dirname "$0")/gradle/wrapper/gradle-wrapper.jar" "$@"
-        EOF
+        # Download official gradlew script
+        curl -L -o gradlew \
+          "https://raw.githubusercontent.com/gradle/gradle/v8.2.0/gradlew"
         
         chmod +x gradlew
         ls -la gradle/wrapper/
+        head -20 gradlew
         
     - name: Check project structure
       run: |
         echo "=== Project Root ==="
         ls -la
-        echo "=== Gradle Wrapper ==="
-        cat gradle/wrapper/gradle-wrapper.properties
         
     - name: Build Debug APK
       run: |
