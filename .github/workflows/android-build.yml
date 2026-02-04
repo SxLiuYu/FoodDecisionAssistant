@@ -18,43 +18,62 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
       
     - name: Make Gradle Executable
       run: chmod +x ./gradlew
       
-    - name: Debug - List files before build
+    - name: Validate Project Structure
       run: |
-        echo "Current directory contents:"
+        echo "Checking project structure..."
+        pwd
         ls -la
-        echo "App directory contents:"
-        ls -la app/ 2>/dev/null || echo "app/ directory does not exist"
-        echo "Gradle wrapper check:"
-        ls -la gradle/ 2>/dev/null || echo "gradle/ directory does not exist"
-        ls -la gradlew 2>/dev/null || echo "gradlew file does not exist"
+        echo "Checking app directory..."
+        if [ -d "app" ]; then
+          echo "App directory exists"
+          ls -la app/
+        else
+          echo "ERROR: App directory does not exist"
+          exit 1
+        fi
         
-    - name: Build APK
+    - name: Check Gradle Wrapper
       run: |
-        echo "Starting build process..."
-        ./gradlew assembleDebug --no-daemon --console=plain --info
-        echo "Build process completed"
+        echo "Checking Gradle wrapper..."
+        if [ -f "gradlew" ]; then
+          echo "gradlew exists"
+        else
+          echo "Creating gradle wrapper..."
+          ./gradlew wrapper --gradle-version 8.2
+        fi
+        ls -la gradlew
+        cat gradle/wrapper/gradle-wrapper.properties
         
-    - name: Verify APK Creation
+    - name: Build Debug APK
+      run: |
+        echo "Starting build..."
+        ./gradlew --no-daemon assembleDebug --stacktrace
+        echo "Build completed"
+        
+    - name: Find APK Output
       run: |
         echo "Looking for APK files..."
-        find . -name "*.apk" -type f
-        echo "Listing app build outputs:"
-        ls -la app/build/outputs/ 2>/dev/null || echo "Outputs directory not found"
-        ls -la app/build/outputs/apk/ 2>/dev/null || echo "APK directory not found"
-        ls -la app/build/outputs/apk/debug/ 2>/dev/null || echo "Debug APK directory not found"
+        find . -name "*.apk" -type f -exec ls -la {} \;
+        echo "Checking standard output locations..."
+        ls -la app/build/outputs/ 2>/dev/null || echo "Standard output path not found"
+        ls -la app/build/outputs/apk/ 2>/dev/null || echo "APK output path not found"
+        ls -la app/build/outputs/apk/debug/ 2>/dev/null || echo "Debug APK path not found"
         
-    - name: Upload APK
+    - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
+      if: always()
       with:
-        name: FoodDecisionAssistant-APK
+        name: FoodAssistant-APK
         path: |
           app/build/outputs/apk/debug/app-debug.apk
-          **/app-debug.apk
           **/*.apk
         if-no-files-found: warn
