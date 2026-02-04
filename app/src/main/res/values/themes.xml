@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 应用主题 -->
+    <style name="Theme.FoodAssistant" parent="android:Theme.Material3.Light.NoActionBar">
+        <!-- 主色调 -->
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryDark">@color/purple_700</item>
+        <item name="colorAccent">@color/teal_200</item>
+        
+        <!-- 状态栏 -->
+        <item name="android:statusBarColor">@color/purple_700</item>
+        <item name="android:windowLightStatusBar">false</item>
+        
+        <!-- 窗口背景 -->
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+    
+    <!-- 启动页主题 -->
+    <style name="Theme.FoodAssistant.Splash" parent="Theme.FoodAssistant">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+    </style>
+</resources>

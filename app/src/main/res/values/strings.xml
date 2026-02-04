@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name">餐食决策助手</string>
+    <string name="app_name_en">Food Decision Assistant</string>
+    
+    <!-- 主界面 -->
+    <string name="title_home">推荐</string>
+    <string name="title_history">历史</string>
+    <string name="title_settings">设置</string>
+    
+    <!-- 按钮 -->
+    <string name="btn_take_photo">拍照</string>
+    <string name="btn_gallery">相册</string>
+    <string name="btn_recommend">获取推荐</string>
+    <string name="btn_quick_recommend">帮我选</string>
+    <string name="btn_like">喜欢</string>
+    <string name="btn_dislike">不喜欢</string>
+    
+    <!-- 提示 -->
+    <string name="hint_input">补充描述（可选）</string>
+    <string name="hint_input_example">比如：想吃清淡一点的</string>
+    <string name="hint_add_photo">点击拍照或选择图片</string>
+    
+    <!-- 状态 -->
+    <string name="loading_init">正在准备AI模型…</string>
+    <string name="loading_analyze">正在分析…</string>
+    <string name="loading_recognize">正在识别图片…</string>
+    <string name="loading_generate">正在生成推荐…</string>
+    <string name="loading_download">正在下载模型…</string>
+    
+    <!-- 错误 -->
+    <string name="error_model_not_found">模型文件不存在</string>
+    <string name="error_init_failed">模型初始化失败</string>
+    <string name="error_inference_failed">推理出错</string>
+    <string name="error_parse_failed">解析结果失败</string>
+    <string name="error_network">网络连接失败</string>
+    
+    <!-- 推荐结果 -->
+    <string name="label_food_name">推荐菜品</string>
+    <string name="label_cuisine">所属菜系</string>
+    <string name="label_reason">推荐理由</string>
+    <string name="label_nutrition">营养信息</string>
+    <string name="label_price">参考价格</string>
+    
+    <!-- 设置 -->
+    <string name="settings_preferences">饮食偏好</string>
+    <string name="settings_favorite_cuisines">喜欢的菜系</string>
+    <string name="settings_disliked_foods">不喜欢的食物</string>
+    <string name="settings_spice_level">辣度偏好</string>
+    <string name="settings_dietary_restrictions">饮食限制</string>
+    <string name="settings_model">模型管理</string>
+    <string name="settings_download_model">下载模型</string>
+    <string name="settings_clear_data">清除数据</string>
+    
+    <!-- 模型下载 -->
+    <string name="model_title">AI模型下载</string>
+    <string name="model_description">需要下载约1.5GB的AI模型文件才能使用推荐功能。模型完全在本地运行，不会上传任何数据。</string>
+    <string name="model_size">模型大小：约1.5GB</string>
+    <string name="model_download_btn">立即下载</string>
+    <string name="model_cancel">暂不下载</string>
+</resources>
