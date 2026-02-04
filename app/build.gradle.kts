@@ -1,4 +1,4 @@
-// app/build.gradle.kts - 完整配置示例
+// app/build.gradle.kts - 简化配置，确保构建成功
 
 plugins {
     id("com.android.application")
@@ -20,18 +20,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         
-        // NDK 配置
-        ndk {
-            abiFilters += listOf("arm64-v8a")
-        }
-
-        externalNativeBuild {
-            cmake {
-                cppFlags += "-std=c++14 -O3"
-            }
-        }
-        
-        // 矢量图支持
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -44,8 +32,8 @@ android {
         }
         
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -74,16 +62,6 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-        jniLibs {
-            useLegacyPackaging = true
-        }
-    }
-
-    externalNativeBuild {
-        cmake {
-            path = file("src/main/cpp/CMakeLists.txt")
-            version = "3.22.1"
         }
     }
 }
@@ -116,36 +94,11 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
     
-    // CameraX
-    val cameraxVersion = "1.3.1"
-    implementation("androidx.camera:camera-core:$cameraxVersion")
-    implementation("androidx.camera:camera-camera2:$cameraxVersion")
-    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
-    implementation("androidx.camera:camera-view:$cameraxVersion")
-    
-    // Coil (图片加载)
-    implementation("io.coil-kt:coil-compose:2.5.0")
-    
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
-    
-    // Navigation
-    implementation("androidx.navigation:navigation-compose:2.7.7")
-    
-    // DataStore (偏好存储)
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
     
     // JSON
     implementation("com.google.code.gson:gson:2.10.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
-    
-    // Network (模型下载)
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
-    
-    // MNN (本地库)
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar", "*.aar"))))
     
     // Debug
     debugImplementation("androidx.compose.ui:ui-tooling")
